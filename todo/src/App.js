@@ -19,8 +19,15 @@ import { Button, Card, Form } from 'react-bootstrap';
 // Renders a Todo item on the page with buttons for marking the todo item as completed and for removing it from the page
 function Todo({ todo, index, markTodo, removeTodo }) {
   return (
-    <div>
-    {/* Add your code */}
+    <div
+      className="todo"
+      
+    >
+      <span style={{ textDecoration: todo.isDone ? "line-through" : "" }}>{todo.text}</span>
+      <div>
+        <Button variant="outline-success" onClick={() => markTodo(index)}>✓</Button>{' '}
+        <Button variant="outline-danger" onClick={() => removeTodo(index)}>✕</Button>
+      </div>
     </div>
   );
 }
@@ -29,50 +36,84 @@ function Todo({ todo, index, markTodo, removeTodo }) {
 // It keeps track of the state of the App so we have visibilty of the other Todos 
 function FormTodo({ addTodo }) {
   /**
-     * Add you code here
-     */
+   * This is an example of a Hook.
+   */
+  const [value, setValue] = React.useState("");
 
   const handleSubmit = e => {
+    e.preventDefault();
     /**
-     * Add you code here
+     * If we haven't added text value for our Todo then don't do anything
      */
+    if (!value) return;
+    addTodo(value);
+    setValue("");
   };
 
   return (
-    /**
-     * Add you code here
-     */
-    <div></div>
+    <Form onSubmit={handleSubmit}> 
+    <Form.Group>
+      <Form.Label><b>Add Todo</b></Form.Label>
+      <Form.Control type="text" className="input" value={value} onChange={e => setValue(e.target.value)} placeholder="Add new todo" />
+    </Form.Group>
+    <Button variant="primary mb-3" type="submit">
+      Submit
+    </Button>
+  </Form>
   );
 }
 
 // The overall function that renders the overall HTML page and allows for calling methods to add, mark and remove Todos
 function App() {
-    /**
-     * Add you code here
-     */
+  const [todos, setTodos] = React.useState([
+    {
+      text: "This is a sampe todo",
+      isDone: false
+    }
+  ]);
 
   const addTodo = text => {
-    /**
-     * Add you code here
+     /**
+     * ARRAY DESTRUCTURING
+     * 
      */
+    const newTodos = [...todos, { text }];
+    setTodos(newTodos);
   };
 
   const markTodo = index => {
-     /**
-     * Add you code here
-     */
+    const newTodos = [...todos];
+    newTodos[index].isDone = true;
+    setTodos(newTodos);
   };
 
   const removeTodo = index => {
-    /**
-     * Add you code here
-     */
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
   };
 
   return (
     <div className="app">
-      {/* Add you code here */}
+      <div className="container">
+        <h1 className="text-center mb-4">Todo List</h1>
+        <FormTodo addTodo={addTodo} />
+        <div>
+          {todos.map((todo, index) => (
+            <Card>
+              <Card.Body>
+                <Todo
+                key={index}
+                index={index}
+                todo={todo}
+                markTodo={markTodo}
+                removeTodo={removeTodo}
+                />
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
