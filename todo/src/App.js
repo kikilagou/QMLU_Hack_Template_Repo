@@ -20,9 +20,7 @@ import { Button, Card, Form } from 'react-bootstrap';
 function Todo({ todo, index, markTodo, removeTodo }) {
   return (
     <div>
-    /**
-     * Add you code here
-     */
+    {/* Add your code */}
     </div>
   );
 }
